@@ -67,3 +67,6 @@ echo "[8/8] Installation complete!"
 echo "Access Graylog Web Interface at: http://$(hostname -I | awk '{print $1}'):9000"
 echo "Default user: admin"
 echo "Use the password you entered above."
+
+echo " Ang galing!"
+echo "Nilagay lahat sa isang script!"
