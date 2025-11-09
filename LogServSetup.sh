@@ -9,13 +9,28 @@ sudo apt update && sudo apt upgrade -y
 echo "[2/8] Setting hostname..."
 sudo hostnamectl set-hostname log-server
 
-# --- B. OPTION 1 – INSTALLING GRAYLOG ---
+# --- B. INSTALLING GRAYLOG ---
 echo "[3/8] Installing Java and dependencies..."
 sudo apt install -y openjdk-11-jre-headless uuid-runtime pwgen gnupg curl wget apt-transport-https
 
-echo "[4/8] Installing MongoDB..."
-sudo apt install -y mongodb
-sudo systemctl enable --now mongodb
+# --- C. INSTALLING MONGODB ---
+echo "[4/8] Installing MongoDB (official repo)..."
+curl -fsSL https://pgp.mongodb.com/server-7.0.asc | \
+sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg --dearmor
+
+# Create the MongoDB source list
+echo "deb [arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg] \
+https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | \
+sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+
+# Install MongoDB packages
+sudo apt update
+sudo apt install -y mongodb-org
+
+# Enable and start MongoDB
+sudo systemctl enable --now mongod
+
+echo "MongoDB installed and running successfully."
 
 echo "[5/8] Installing Elasticsearch..."
 wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
